@@ -1,0 +1,46 @@
+<!--Book Appointment-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Appointment</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <script type="module" src="js/appointments.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Book an Appointment with a Teacher</h2>
+
+      <form id="appointmentForm">
+        <label for="teacherSelect">Choose a Teacher:</label>
+        <select id="teacherSelect">
+          <option value="">Loading tecahers...</option>
+        </select>
+
+        <label for="appointmentDate">Select Date:</label>
+        <input type="date" id="appointmentDate" required />
+
+        <label for="message">Message (optional):</label>
+        <textarea
+          id="message"
+          rows="4"
+          placeholder="Write your message..."
+        ></textarea>
+
+        <button type="submitBtn" class="submitBtn">
+          <i class="fas fa-paper-plane"></i> Request Appointment
+        </button>
+      </form>
+
+      <div id="appointmentMessage"></div>
+      <br />
+      <a href="student.html" class="btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+  </body>
+</html>

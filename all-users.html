@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>All Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script type="module" src="js/allUsers.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Registered Users</h2>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="userList">
+          <!-- JS will populate here -->
+        </tbody>
+      </table>
+
+      <br />
+      <a href="admin.html" class="btn"
+        ><i class="fas fa-arrow-left"></i> Back to Admin Dashboard</a
+      >
+    </div>
+  </body>
+</html>

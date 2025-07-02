@@ -1,0 +1,31 @@
+<!--Teacher Dashboard-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Teacher Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <script type="module" src="js/app.js" defer></script>
+    <script type="module" src="js/teacher.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="welcome-message">
+        Welcome, <span id="teacherName">Teacher</span>!
+      </h2>
+      <p>Your email: <span id="teacherEmail"></span></p>
+      <p>Your role: <span id="teacherRole"></span></p>
+
+      <div class="dashboard-buttons">
+        <a href="view-appointments.html" class="btn"><i class="fas fa-calendar-check"></i> View Appointments</a>
+        <button id="logoutBtn" class="btn logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </div>
+  </body>
+</html>

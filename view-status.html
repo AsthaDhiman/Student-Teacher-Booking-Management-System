@@ -1,0 +1,38 @@
+<!--View Status-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Appointments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <script type="module" src="js/viewStatus.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>My Appointment Requests</h2>
+
+      <!-- Filter Dropdown -->
+      <label for="statusFilter">Filter by Status:</label>
+      <select id="statusFilter">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+
+      <div id="statusList">
+        <p>Loading your appointments...</p>
+      </div>
+
+      <div class="dashboard-buttons" style="margin-top: 20px">
+        <a href="student.html" class="btn">⬅️ Back to Dashboard</a>
+      </div>
+    </div>
+  </body>
+</html>

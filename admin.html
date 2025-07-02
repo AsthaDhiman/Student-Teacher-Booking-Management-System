@@ -1,0 +1,57 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script type="module" src="js/app.js" defer></script>
+    <script type="module" src="js/admin.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="welcome-message">
+        Welcome Admin, <span id="adminName"></span>
+      </h2>
+      <p><strong>Email:</strong> <span id="adminEmail"></span></p>
+      <p><strong>Role:</strong> <span id="adminRole"></span></p>
+
+      <div class="summary-boxes">
+        <div class="summary-item">
+          <strong>Total Students:</strong> <span id="totalStudents">0</span>
+        </div>
+        <div class="summary-item">
+          <strong>Total Teachers:</strong> <span id="totalTeachers">0</span>
+        </div>
+        <div class="summary-item">
+          <strong>Pending Requests:</strong> <span id="pendingRequests">0</span>
+        </div>
+        <div class="summary-item">
+          <strong>Approved Requests:</strong>
+          <span id="approvedRequests">0</span>
+        </div>
+        <div class="summary-item">
+          <strong>Rejected Requests:</strong>
+          <span id="rejectedRequests">0</span>
+        </div>
+      </div>
+
+      <div class="dashboard-buttons">
+        <a href="all-users.html" class="btn"
+          ><i class="fas fa-users"></i> View All Users</a
+        >
+        <a href="all-appointments.html" class="btn"
+          ><i class="fas fa-calendar-alt"></i> View All Appointments</a
+        >
+        <button id="logoutBtn" class="btn logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
