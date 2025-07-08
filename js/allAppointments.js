@@ -1,30 +1,15 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+// ✅ Reuse centralized Firebase config
+import { auth, db } from "../firebase/firebase-config.js";
 import {
-  getAuth,
-  onAuthStateChanged,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore,
   collection,
   getDocs,
   doc,
-  getDoc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔐 Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyAoHnGWZ0v3Uww8bgAIaGlP0PUCi5pZFUg",
-  authDomain: "student-teacher-booking-54ea4.firebaseapp.com",
-  projectId: "student-teacher-booking-54ea4",
-  storageBucket: "student-teacher-booking-54ea4.appspot.com",
-  messagingSenderId: "568549194346",
-  appId: "1:568549194346:web:ecb0025c59df6bbe80a813",
-  measurementId: "G-E259EVN0NP",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 const allAppointmentsList = document.getElementById("allAppointmentsList");
 
 // 🔁 Load All Appointments for Admin
@@ -43,9 +28,7 @@ async function loadAllAppointments() {
     // Get student info
     const studentRef = doc(db, "users", appt.studentId);
     const studentSnap = await getDoc(studentRef);
-    const student = studentSnap.exists()
-      ? studentSnap.data()
-      : { name: "Unknown" };
+    const student = studentSnap.exists() ? studentSnap.data() : { name: "Unknown" };
 
     // Get teacher info
     const teacherRef = doc(db, "users", appt.teacherId);
@@ -54,7 +37,6 @@ async function loadAllAppointments() {
       ? teacherSnap.data()
       : { name: "Unknown", subject: "N/A", department: "N/A" };
 
-    // Create UI
     const apptDiv = document.createElement("div");
     apptDiv.className = "appointment-box";
 

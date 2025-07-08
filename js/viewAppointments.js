@@ -1,10 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { auth, db } from "../firebase/firebase-config.js";
 import {
-  getAuth,
-  onAuthStateChanged,
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getFirestore,
   collection,
   getDocs,
   doc,
@@ -13,25 +8,10 @@ import {
   query,
   where,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// 🔐 Firebase Config
-const firebaseConfig = {
-  apiKey: "AIzaSyAoHnGWZ0v3Uww8bgAIaGlP0PUCi5pZFUg",
-  authDomain: "student-teacher-booking-54ea4.firebaseapp.com",
-  projectId: "student-teacher-booking-54ea4",
-  storageBucket: "student-teacher-booking-54ea4.appspot.com",
-  messagingSenderId: "568549194346",
-  appId: "1:568549194346:web:ecb0025c59df6bbe80a813",
-  measurementId: "G-E259EVN0NP",
-};
-
-// 🔌 Firebase Init
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
 const appointmentsList = document.getElementById("appointmentsList");
 
-// 🔁 Load Teacher Appointments
 async function loadAppointments(currentTeacherId) {
   const q = query(
     collection(db, "appointments"),
@@ -54,21 +34,16 @@ async function loadAppointments(currentTeacherId) {
   for (const docSnap of snapshot.docs) {
     const appt = docSnap.data();
 
-    // Get student info
-    const studentRef = doc(db, "users", appt.studentId);
-    const studentSnap = await getDoc(studentRef);
+    const studentSnap = await getDoc(doc(db, "users", appt.studentId));
     const student = studentSnap.exists()
       ? studentSnap.data()
       : { name: "Unknown" };
 
-    // Get teacher info
-    const teacherRef = doc(db, "users", appt.teacherId);
-    const teacherSnap = await getDoc(teacherRef);
+    const teacherSnap = await getDoc(doc(db, "users", appt.teacherId));
     const teacher = teacherSnap.exists()
       ? teacherSnap.data()
       : { department: "N/A", subject: "N/A" };
 
-    // Render UI
     const apptDiv = document.createElement("div");
     apptDiv.className = "appointment-box";
 
@@ -85,12 +60,10 @@ async function loadAppointments(currentTeacherId) {
       </p>
       ${
         appt.status === "pending"
-          ? `
-        <div class="dashboard-buttons">
-          <button class="approveBtn" onclick="handleDecision('${docSnap.id}', 'approved')">✅ Approve</button>
-          <button class="rejectBtn" onclick="handleDecision('${docSnap.id}', 'rejected')">❌ Reject</button>
-        </div>
-      `
+          ? `<div class="dashboard-buttons">
+               <button class="approveBtn" onclick="handleDecision('${docSnap.id}', 'approved')">✅ Approve</button>
+               <button class="rejectBtn" onclick="handleDecision('${docSnap.id}', 'rejected')">❌ Reject</button>
+             </div>`
           : ""
       }
       <hr/>
@@ -100,10 +73,8 @@ async function loadAppointments(currentTeacherId) {
   }
 }
 
-// 🔁 Handle Approve/Reject Buttons
 window.handleDecision = async (id, decision) => {
-  const apptRef = doc(db, "appointments", id);
-  await updateDoc(apptRef, { status: decision });
+  await updateDoc(doc(db, "appointments", id), { status: decision });
 
   const statusSpan = document.getElementById("status-" + id);
   if (statusSpan) statusSpan.textContent = decision;
@@ -111,7 +82,6 @@ window.handleDecision = async (id, decision) => {
   alert("Appointment " + decision);
 };
 
-// 🔐 Auth Check
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";

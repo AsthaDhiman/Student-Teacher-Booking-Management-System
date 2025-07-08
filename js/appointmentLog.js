@@ -1,22 +1,16 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAoHnGWZ0v3Uww8bgAIaGlP0PUCi5pZFUg",
-  authDomain: "student-teacher-booking-54ea4.firebaseapp.com",
-  projectId: "student-teacher-booking-54ea4",
-  storageBucket: "student-teacher-booking-54ea4.appspot.com",
-  messagingSenderId: "568549194346",
-  appId: "1:568549194346:web:ecb0025c59df6bbe80a813",
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+// ✅ Import shared config
+import { auth, db } from "../firebase/firebase-config.js";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const logList = document.getElementById("logList");
 
+// 🔁 Load All Appointments with Logs
 async function loadAllAppointments() {
   const apptSnap = await getDocs(collection(db, "appointments"));
   logList.innerHTML = "";
@@ -46,7 +40,9 @@ async function loadAllAppointments() {
       <p><strong>Student:</strong> ${student}</p>
       <p><strong>Teacher:</strong> ${teacher}</p>
       <p><strong>Date:</strong> ${appt.date}</p>
-      <p><strong>Status:</strong> <span class="${appt.status}">${appt.status}</span></p>
+      <p><strong>Status:</strong> <span class="${appt.status}">${
+      appt.status
+    }</span></p>
       <p><strong>Message:</strong> ${appt.message || "No message"}</p>
       <hr />
     `;
@@ -55,6 +51,7 @@ async function loadAllAppointments() {
   }
 }
 
+// 🔐 Ensure Admin is Logged In
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
