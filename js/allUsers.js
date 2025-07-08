@@ -4,6 +4,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/f
 import {
   collection,
   getDocs,
+  getDoc,
   deleteDoc,
   doc,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -59,11 +60,10 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  const userDoc = await getDocs(doc(db, "users", user.uid));
-  const userData = userDoc.exists() ? userDoc.data() : {};
-  const role = userData.role || "student";
+  const userDocRef = doc(db, "users", user.uid); // ✅ Correct usage
+  const userDoc = await getDoc(userDocRef);
 
-  if (role === "admin") {
+  if (userDoc.exists() && userDoc.data().role === "admin") {
     currentAdminUid = user.uid;
     fetchAndRenderUsers();
   } else {
