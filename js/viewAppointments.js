@@ -14,6 +14,7 @@ import {
   where,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// 🔐 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyAoHnGWZ0v3Uww8bgAIaGlP0PUCi5pZFUg",
   authDomain: "student-teacher-booking-54ea4.firebaseapp.com",
@@ -24,19 +25,24 @@ const firebaseConfig = {
   measurementId: "G-E259EVN0NP",
 };
 
+// 🔌 Firebase Init
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 const appointmentsList = document.getElementById("appointmentsList");
 
-// Load appointments for this teacher
+// 🔁 Load Teacher Appointments
 async function loadAppointments(currentTeacherId) {
   const q = query(
     collection(db, "appointments"),
     where("teacherId", "==", currentTeacherId)
   );
   const snapshot = await getDocs(q);
+
+  if (!appointmentsList) {
+    console.warn("#appointmentsList element not found.");
+    return;
+  }
 
   appointmentsList.innerHTML = "";
 
@@ -47,33 +53,46 @@ async function loadAppointments(currentTeacherId) {
 
   for (const docSnap of snapshot.docs) {
     const appt = docSnap.data();
+
+    // Get student info
     const studentRef = doc(db, "users", appt.studentId);
     const studentSnap = await getDoc(studentRef);
     const student = studentSnap.exists()
       ? studentSnap.data()
       : { name: "Unknown" };
 
+    // Get teacher info
+    const teacherRef = doc(db, "users", appt.teacherId);
+    const teacherSnap = await getDoc(teacherRef);
+    const teacher = teacherSnap.exists()
+      ? teacherSnap.data()
+      : { department: "N/A", subject: "N/A" };
+
+    // Render UI
     const apptDiv = document.createElement("div");
     apptDiv.className = "appointment-box";
 
     apptDiv.innerHTML = `
       <p><strong>Student:</strong> ${student.name}</p>
+      <p><strong>Subject:</strong> ${teacher.subject || "Not specified"}</p>
+      <p><strong>Department:</strong> ${teacher.department || "N/A"}</p>
       <p><strong>Date:</strong> ${appt.date}</p>
       <p><strong>Message:</strong> ${appt.message || "No message"}</p>
-      <p><strong>Status:</strong> <span id="status-${docSnap.id}">${
-      appt.status
-    }</span></p>
-${
-  appt.status === "pending"
-    ? `
-  <div class="dashboard-buttons">
-    <button class="approveBtn" onclick="handleDecision('${docSnap.id}', 'approved')">✅ Approve</button>
-    <button class="rejectBtn" onclick="handleDecision('${docSnap.id}', 'rejected')">❌ Reject</button>
-  </div>
-`
-    : ""
-}
-
+      <p><strong>Status:</strong> 
+        <span id="status-${docSnap.id}" class="status ${appt.status}">
+          ${appt.status}
+        </span>
+      </p>
+      ${
+        appt.status === "pending"
+          ? `
+        <div class="dashboard-buttons">
+          <button class="approveBtn" onclick="handleDecision('${docSnap.id}', 'approved')">✅ Approve</button>
+          <button class="rejectBtn" onclick="handleDecision('${docSnap.id}', 'rejected')">❌ Reject</button>
+        </div>
+      `
+          : ""
+      }
       <hr/>
     `;
 
@@ -81,6 +100,7 @@ ${
   }
 }
 
+// 🔁 Handle Approve/Reject Buttons
 window.handleDecision = async (id, decision) => {
   const apptRef = doc(db, "appointments", id);
   await updateDoc(apptRef, { status: decision });
@@ -91,8 +111,7 @@ window.handleDecision = async (id, decision) => {
   alert("Appointment " + decision);
 };
 
-let currentTeacherUid = null;
-
+// 🔐 Auth Check
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
@@ -101,8 +120,7 @@ onAuthStateChanged(auth, async (user) => {
 
   const docSnap = await getDoc(doc(db, "users", user.uid));
   if (docSnap.exists() && docSnap.data().role === "teacher") {
-    currentTeacherUid = user.uid;
-    loadAppointments(currentTeacherUid);
+    loadAppointments(user.uid);
   } else {
     alert("Access denied.");
     window.location.href = "login.html";

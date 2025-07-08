@@ -33,7 +33,7 @@ const statusFilter = document.getElementById("statusFilter");
 
 let allAppointments = [];
 
-// ✅ Cancel Appointment Function
+// ✅ Cancel Appointment
 async function cancelAppointment(apptId) {
   const confirmCancel = confirm(
     "Are you sure you want to cancel this appointment?"
@@ -72,9 +72,15 @@ async function loadAppointments(studentId) {
 
     const teacherRef = doc(db, "users", data.teacherId);
     const teacherSnap = await getDoc(teacherRef);
-    data.teacherName = teacherSnap.exists()
-      ? teacherSnap.data().name
-      : "Unknown";
+
+    if (teacherSnap.exists()) {
+      const teacherData = teacherSnap.data();
+      data.teacherName = teacherData.name || "Unknown";
+      data.teacherSubject = teacherData.subject || "Not specified";
+    } else {
+      data.teacherName = "Unknown";
+      data.teacherSubject = "Not specified";
+    }
 
     allAppointments.push(data);
   }
@@ -82,7 +88,7 @@ async function loadAppointments(studentId) {
   renderAppointments(statusFilter.value);
 }
 
-// ✅ Render appointments based on filter
+// ✅ Render Appointments
 function renderAppointments(filter) {
   statusList.innerHTML = "";
 
@@ -102,6 +108,7 @@ function renderAppointments(filter) {
 
     box.innerHTML = `
       <p><strong>Teacher:</strong> ${appt.teacherName}</p>
+      <p><strong>Subject:</strong> ${appt.teacherSubject}</p>
       <p><strong>Date:</strong> ${appt.date}</p>
       <p><strong>Message:</strong> ${appt.message || "No message"}</p>
       <p><strong>Status:</strong> <span class="${appt.status}">${
@@ -122,12 +129,12 @@ function renderAppointments(filter) {
   });
 }
 
-// ✅ Handle dropdown filter change
+// ✅ Filter Change
 statusFilter.addEventListener("change", () => {
   renderAppointments(statusFilter.value);
 });
 
-// ✅ Auth & Load
+// ✅ Auth Check
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";

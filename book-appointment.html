@@ -19,8 +19,8 @@
 
       <form id="appointmentForm">
         <label for="teacherSelect">Choose a Teacher:</label>
-        <select id="teacherSelect">
-          <option value="">Loading tecahers...</option>
+        <select id="teacherSelect" required>
+          <option value="">-- Select a Teacher --</option>
         </select>
 
         <label for="appointmentDate">Select Date:</label>
@@ -40,7 +40,9 @@
 
       <div id="appointmentMessage"></div>
       <br />
-      <a href="student.html" class="btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+      <a href="student.html" class="btn"
+        ><i class="fas fa-arrow-left"></i> Back to Dashboard</a
+      >
     </div>
   </body>
 </html>

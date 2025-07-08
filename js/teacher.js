@@ -39,26 +39,40 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    // Display teacher profile
-    document.getElementById("teacherName").textContent = userData.name;
-    document.getElementById("teacherEmail").textContent = userData.email;
-    document.getElementById("teacherRole").textContent = userData.role;
+    // Display teacher profile (safe checks for each element)
+    const nameEl = document.getElementById("teacherName");
+    const emailEl = document.getElementById("teacherEmail");
+    const roleEl = document.getElementById("teacherRole");
+    const deptEl = document.getElementById("teacherDepartment");
+    const subjEl = document.getElementById("teacherSubject");
+
+    if (nameEl) nameEl.textContent = userData.name;
+    if (emailEl) emailEl.textContent = userData.email;
+    if (roleEl) roleEl.textContent = userData.role;
+    if (deptEl) deptEl.textContent = userData.department || "Not specified";
+    if (subjEl) subjEl.textContent = userData.subject || "Not specified";
 
     // Load appointments
     loadAppointments(uid);
   } catch (error) {
     console.error("Error loading teacher data:", error);
+    alert("Something went wrong while loading your profile.");
   }
 });
 
 // Load appointments for the logged-in teacher
 async function loadAppointments(teacherId) {
+  const container = document.getElementById("appointmentList");
+  if (!container) {
+    console.warn("No #appointmentList element found.");
+    return;
+  }
+
+  container.innerHTML = "";
+
   const appointmentsRef = collection(db, "appointments");
   const q = query(appointmentsRef, where("teacherId", "==", teacherId));
   const snapshot = await getDocs(q);
-  const container = document.getElementById("appointmentList");
-
-  container.innerHTML = "";
 
   if (snapshot.empty) {
     container.innerHTML = "<p>No appointments yet.</p>";
@@ -78,9 +92,9 @@ async function loadAppointments(teacherId) {
       ${
         data.status === "pending"
           ? `<div class="action-buttons">
-           <button class="approveBtn" data-id="${docSnap.id}">Approve</button>
-           <button class="rejectBtn" data-id="${docSnap.id}">Reject</button>
-         </div>`
+              <button class="approveBtn" data-id="${docSnap.id}">Approve</button>
+              <button class="rejectBtn" data-id="${docSnap.id}">Reject</button>
+            </div>`
           : ""
       }
     `;
@@ -88,7 +102,7 @@ async function loadAppointments(teacherId) {
     container.appendChild(div);
   });
 
-  // Handle approve/reject
+  // Event delegation for approve/reject buttons
   container.addEventListener("click", async (e) => {
     const id = e.target.getAttribute("data-id");
     if (!id) return;
@@ -100,9 +114,14 @@ async function loadAppointments(teacherId) {
       : null;
 
     if (newStatus) {
-      const ref = doc(db, "appointments", id);
-      await updateDoc(ref, { status: newStatus });
-      loadAppointments(teacherId); // refresh list
+      try {
+        const ref = doc(db, "appointments", id);
+        await updateDoc(ref, { status: newStatus });
+        loadAppointments(teacherId); // reload updated list
+      } catch (err) {
+        console.error("Error updating appointment status:", err);
+        alert("Failed to update status.");
+      }
     }
   });
 }

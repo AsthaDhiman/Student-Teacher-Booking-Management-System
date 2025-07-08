@@ -4,13 +4,13 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  sendPasswordResetEmail,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   doc,
   setDoc,
   getDoc,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // Get current page name
 const page = window.location.pathname.split("/").pop();
@@ -64,6 +64,7 @@ if (page === "login.html") {
     });
   }
 
+  // Forgot Password Handler
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
   const resetMessage = document.getElementById("resetMessage");
 
@@ -103,10 +104,17 @@ if (page === "register.html") {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
       const role = document.getElementById("role").value;
+      const dept = document.getElementById("department").value.trim();
+      const subj = document.getElementById("subject").value.trim();
       const messageBox = document.getElementById("registerMessage");
 
       if (!role) {
         messageBox.textContent = "Please select a role.";
+        return;
+      }
+
+      if (role === "teacher" && (!dept || !subj)) {
+        messageBox.textContent = "Please enter department and subject.";
         return;
       }
 
@@ -124,6 +132,7 @@ if (page === "register.html") {
           name,
           email,
           role,
+          ...(role === "teacher" ? { department: dept, subject: subj } : {}),
           createdAt: new Date(),
         });
 
@@ -133,9 +142,23 @@ if (page === "register.html") {
           window.location.href = "login.html";
         }, 2000);
       } catch (error) {
+        console.error("Registration error:", error);
         messageBox.textContent = error.message;
       }
     });
+
+    // Show/hide teacher fields based on selected role
+    const roleSelect = document.getElementById("role");
+    const teacherFields = document.querySelectorAll(".teacher-only");
+
+    if (roleSelect) {
+      roleSelect.addEventListener("change", () => {
+        const isTeacher = roleSelect.value === "teacher";
+        teacherFields.forEach((field) => {
+          field.style.display = isTeacher ? "block" : "none";
+        });
+      });
+    }
   }
 }
 

@@ -1,32 +1,35 @@
-// js/allAppointments.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore,
+  collection,
   getDocs,
   doc,
   getDoc,
-  collection
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// 🔐 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyAoHnGWZ0v3Uww8bgAIaGlP0PUCi5pZFUg",
   authDomain: "student-teacher-booking-54ea4.firebaseapp.com",
   projectId: "student-teacher-booking-54ea4",
   storageBucket: "student-teacher-booking-54ea4.appspot.com",
   messagingSenderId: "568549194346",
-  appId: "1:568549194346:web:ecb0025c59df6bbe80a813"
+  appId: "1:568549194346:web:ecb0025c59df6bbe80a813",
+  measurementId: "G-E259EVN0NP",
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 const allAppointmentsList = document.getElementById("allAppointmentsList");
 
+// 🔁 Load All Appointments for Admin
 async function loadAllAppointments() {
   const snapshot = await getDocs(collection(db, "appointments"));
-
   allAppointmentsList.innerHTML = "";
 
   if (snapshot.empty) {
@@ -37,46 +40,54 @@ async function loadAllAppointments() {
   for (const docSnap of snapshot.docs) {
     const appt = docSnap.data();
 
-    // Get student and teacher names
+    // Get student info
     const studentRef = doc(db, "users", appt.studentId);
+    const studentSnap = await getDoc(studentRef);
+    const student = studentSnap.exists()
+      ? studentSnap.data()
+      : { name: "Unknown" };
+
+    // Get teacher info
     const teacherRef = doc(db, "users", appt.teacherId);
+    const teacherSnap = await getDoc(teacherRef);
+    const teacher = teacherSnap.exists()
+      ? teacherSnap.data()
+      : { name: "Unknown", subject: "N/A", department: "N/A" };
 
-    const [studentSnap, teacherSnap] = await Promise.all([
-      getDoc(studentRef),
-      getDoc(teacherRef)
-    ]);
-
-    const studentName = studentSnap.exists() ? studentSnap.data().name : "Unknown";
-    const teacherName = teacherSnap.exists() ? teacherSnap.data().name : "Unknown";
-
+    // Create UI
     const apptDiv = document.createElement("div");
     apptDiv.className = "appointment-box";
 
     apptDiv.innerHTML = `
-      <p><strong>Student:</strong> ${studentName}</p>
-      <p><strong>Teacher:</strong> ${teacherName}</p>
+      <p><strong>Student:</strong> ${student.name}</p>
+      <p><strong>Teacher:</strong> ${teacher.name}</p>
+      <p><strong>Subject:</strong> ${teacher.subject}</p>
+      <p><strong>Department:</strong> ${teacher.department}</p>
       <p><strong>Date:</strong> ${appt.date}</p>
       <p><strong>Message:</strong> ${appt.message || "No message"}</p>
-      <p><strong>Status:</strong> <span class="${appt.status}">${appt.status}</span></p>
-      <hr/>
+      <p><strong>Status:</strong> <span class="status ${appt.status}">${appt.status}</span></p>
+      <hr />
     `;
 
     allAppointmentsList.appendChild(apptDiv);
   }
 }
 
-// Auth check
+// 🔐 Ensure Admin is Logged In
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
     return;
   }
 
-  const userSnap = await getDoc(doc(db, "users", user.uid));
-  if (userSnap.exists() && userSnap.data().role === "admin") {
-    loadAllAppointments();
-  } else {
-    alert("Access denied.");
+  const docSnap = await getDoc(doc(db, "users", user.uid));
+  const role = docSnap.exists() ? docSnap.data().role : null;
+
+  if (role !== "admin") {
+    alert("Access denied. You are not an admin.");
     window.location.href = "login.html";
+    return;
   }
+
+  loadAllAppointments();
 });

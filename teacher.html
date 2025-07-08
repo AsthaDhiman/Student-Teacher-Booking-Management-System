@@ -1,4 +1,3 @@
-<!--Teacher Dashboard-->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,21 +9,28 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-
     <script type="module" src="js/app.js" defer></script>
     <script type="module" src="js/teacher.js" defer></script>
   </head>
   <body>
     <div class="container">
       <h2 class="welcome-message">
-        Welcome, <span id="teacherName">Teacher</span>!
+        Welcome, <span id="welcomeName">Teacher</span>!
       </h2>
-      <p>Your email: <span id="teacherEmail"></span></p>
-      <p>Your role: <span id="teacherRole"></span></p>
+
+      <p><strong>Name:</strong> <span id="teacherName"></span></p>
+      <p><strong>Email:</strong> <span id="teacherEmail"></span></p>
+      <p><strong>Role:</strong> <span id="teacherRole"></span></p>
+      <p><strong>Department:</strong> <span id="teacherDepartment"></span></p>
+      <p><strong>Subject:</strong> <span id="teacherSubject"></span></p>
 
       <div class="dashboard-buttons">
-        <a href="view-appointments.html" class="btn"><i class="fas fa-calendar-check"></i> View Appointments</a>
-        <button id="logoutBtn" class="btn logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        <a href="view-appointments.html" class="btn">
+          <i class="fas fa-calendar-check"></i> View Appointments
+        </a>
+        <button id="logoutBtn" class="btn logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
       </div>
     </div>
   </body>

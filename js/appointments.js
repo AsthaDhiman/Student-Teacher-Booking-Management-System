@@ -33,17 +33,20 @@ const message = document.getElementById("message");
 const appointmentForm = document.getElementById("appointmentForm");
 const appointmentMessage = document.getElementById("appointmentMessage");
 
-// Load all teachers
+// Load all teachers with name, department, and subject
 async function loadTeachers() {
   const querySnapshot = await getDocs(collection(db, "users"));
-  teacherSelect.innerHTML = '<option value="">Select a teacher</option>';
+  teacherSelect.innerHTML = '<option value="">-- Select a Teacher --</option>';
 
   querySnapshot.forEach((docSnap) => {
     const user = docSnap.data();
     if (user.role === "teacher") {
       const option = document.createElement("option");
       option.value = docSnap.id;
-      option.textContent = user.name;
+
+      // Display: Name - Department (Subject)
+      option.textContent = `${user.name} - ${user.department} (${user.subject})`;
+
       teacherSelect.appendChild(option);
     }
   });
