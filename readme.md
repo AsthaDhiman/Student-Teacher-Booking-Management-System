@@ -2,28 +2,42 @@
 
 A web-based platform that allows to book appointments with teachers. Includes role-based dashboards for Admin, Teacher, and Student users using Firebase Authentication and Firestore.
 
-✨ Features
-1. Authentication System(Login/Register with roles)
-2. Student Dashboard
-   2.1 Book appointment with a teacher
-   2.2 View appointment status
-3. Teacher Dashboard
-   3.1 View incoming appointment requests
-   3.2 Approve or reject requests
-4. Admin Dashboard
-   4.1 View total student and teachers
-   4.2 Monitor pending and approved appointments
-5. Password visibilty toggle
-6. Role based access control
-7. Real time data from Firebase
+## ✨ Features
 
-🧑‍💻 Tech Stack
-Frontend: HTML, CSS, JavaScript
-Backend: Firebase
-        Authentication
-        Firestore Database
+### Authentication
+- Login/Register with role selection
+- Firebase Authentication
+- Role-based access control
 
-📁 Folder Structure
+### Student Dashboard
+- Book appointment with a teacher
+- View appointment status(pending/ approved/ rejected)
+- Cancel pending appointments
+- Filter appointments by status
+
+### Teacher Dashboard
+-- View incoming appointments requests
+-- Approved or reject requests
+-- View student message, booking date, and subject
+
+### Admin Dashboard
+-- View total students and teachers
+-- View all appointments in the system
+-- Monitor pending and approved appointments
+-- View all users and logs(if enabled)
+
+---
+
+
+## 🧑‍💻 Tech Stack
+- **Frontend**: HTML, CSS, JavaScript
+- **Backend**: Firebase
+        - Authentication
+        - Firestore Database
+
+---        
+
+## 📁 Folder Structure
 /project-root
 |
 |--index.html
@@ -42,7 +56,7 @@ Backend: Firebase
 |--css/
     |--style.css
 |--js/
-    |--app.js   #shared logic
+    |--app.js   #shared logic for auth, register, login, logout
     |--student.js
     |--teacher.js
     |--admin.js
@@ -55,12 +69,16 @@ Backend: Firebase
 |--firebase
     |--firebase-config.js     
 
+---    
+
 
 🔧 Setup Instructions
 1. Clone or download this repository.
-2. Replace the Firebase config in firebase-config.js with your own.
-3. Make sure Firebase and Authentication are enabled in Firebase.
-4. Open index.html or login.html in your browser.
+2. Replace the Firebase config in `firebase-config.js` with your own Firebase project credentials.
+3. Make sure Firebase Authentication and Firebase Database are enabled in Firebase project.
+4. Open `index.html` or `login.html` in your browser(via Live Server or Localhost).
+
+---
 
 📷 Screenshots
 
@@ -73,17 +91,32 @@ Backend: Firebase
 ### Login
 ![Login Page](assets/login.png)
 
-### Student View
+### Student Dashboard
 ![Student Page](assets/student-view.png)
 
-### Teacher View
+### Teacher Dashboard
 ![Teacher Page](assets/teacher-view.png)
 
-### Admin View
+### Admin Dashboard
 ![Admin Page](assets/admin-view.png)
+
+---
+
 
 
 📌 Future Enhancements
-1. Add notification or emails on appointments approval
-2. Filter or search appointments
-3. Export reports for admin
+1. Add email notifications on appointments approval/rejection.
+2. Add search/filter functionality for appointments and users.
+3. Export appointments reports for admin.
+4. Pagination and sorting in user and appointments lists.
+
+---
+
+
+
+
+## Author
+
+**Astha Dhiman**
+
+---
