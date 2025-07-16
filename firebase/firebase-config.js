@@ -1,27 +1,29 @@
-// Import Firebase modules (include this via CDN in HTML or install via npm if using bundlers)
+// Import Firebase modules via CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Your Firebase config
+// Dummy Firebase config – safe for public upload
 const firebaseConfig = {
-  apiKey: "AIzaSyAoHnGWZ0v3Uww8bgAIaGlP0PUCi5pZFUg",
-  authDomain: "student-teacher-booking-54ea4.firebaseapp.com",
-  projectId: "student-teacher-booking-54ea4",
-  storageBucket: "student-teacher-booking-54ea4.firebasestorage.app",
-  messagingSenderId: "568549194346",
-  appId: "1:568549194346:web:ecb0025c59df6bbe80a813",
-  measurementId: "G-E259EVN0NP"
+  apiKey: "AIzaSyDUMMY-KEY-HERE123456",
+  authDomain: "your-app.firebaseapp.com",
+  projectId: "your-app",
+  storageBucket: "your-app.appspot.com",
+  messagingSenderId: "000000000000",
+  appId: "1:000000000000:web:dummyid123456",
+  measurementId: "G-XXXXXXXXXX"
 };
-
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-// Export Firebase services
+// Export services
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 export { auth, db };
+
+//⚠️ This project uses a dummy Firebase config.
+//To make it work, replace the config in `firebase-config.js` with your own Firebase project's credentials.
