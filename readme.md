@@ -112,7 +112,8 @@ A web-based platform that allows to book appointments with teachers. Includes ro
 
 ---
 
-
+⚠️ This project uses a dummy Firebase config.
+To make it work, replace the config in `firebase-config.js` with your own Firebase project's credentials.
 
 
 ## Author
